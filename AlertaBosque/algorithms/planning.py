@@ -25,7 +25,17 @@ def action_value(mdp, state, action, values):
       values[terminal] es cero.
     """
     # TODO: Add your code here
-    raise NotImplementedError("Complete este bloque TODO")
+
+    total = 0.0
+
+    for successor, probability in mdp.transitions(state, action):
+        reward = mdp.reward(state, action, successor)
+
+        total += probability * (
+            reward + mdp.discount * values[successor]
+        )
+
+    return total
     # FIN DEL BLOQUE DEL ESTUDIANTE
 
 
@@ -53,8 +63,29 @@ def value_iteration(mdp, tolerance=1e-8, max_iterations=1000):
     values = dict.fromkeys(mdp.states, 0.0)
     history, deltas = [values.copy()], []
     for _ in range(max_iterations):
+
         # TODO: Add your code here
-        raise NotImplementedError("Complete este bloque TODO")
+        new_values = {}
+
+        for state in mdp.states:
+            available_actions = mdp.actions(state)
+
+            if not available_actions:
+                new_values[state] = 0.0
+
+            else:
+                new_values[state] = max(
+                    action_value(mdp, state, action, values)
+                    for action in available_actions
+                )
+
+        delta = max(
+            abs(new_values[state] - values[state])
+            for state in mdp.states
+        )
+
+        values = new_values
+        converged = delta < tolerance
         # FIN DEL BLOQUE DEL ESTUDIANTE
         # Copias para la animación y empaquetado del resultado.
         history.append(values.copy())
