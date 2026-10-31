@@ -116,7 +116,7 @@ def extract_policy(mdp, values):
 
         for action in actions[1:]:
             value = action_value(mdp,state,action,values)
-            if value > best_value:
+            if round(value,12)> round(best_value,12):
                 best_value = value
                 best_action = action
         policy[state] = best_action
